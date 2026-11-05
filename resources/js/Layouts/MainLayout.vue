@@ -6,11 +6,11 @@
         <div class="flex items-center gap-6">
           <span class="flex items-center gap-2">
             <i class="fa-solid fa-location-dot text-brand"></i>
-            2B/4 Ring Road, Shyamoli, Dhaka
+            {{ settings.office_address || '2B/4 Ring Road, Shyamoli, Dhaka' }}
           </span>
           <span class="flex items-center gap-2">
             <i class="fa-regular fa-clock text-brand"></i>
-            Sat to Thursday: 8:00 am - 7:00 pm
+            {{ settings.business_hours || 'Sat to Thursday: 8:00 am - 7:00 pm' }}
           </span>
         </div>
         <div class="flex items-center gap-6">
@@ -136,13 +136,13 @@
             <img src="/images/SoftPolli-logo-offset.png" alt="SoftPolli" class="w-40 brightness-0 invert">
           </Link>
           <p class="text-xs text-slate-400 leading-relaxed mb-6">
-            We build reliable, scalable and future-ready software solutions that help businesses automate operations, improve efficiency, and grow faster.
+            {{ settings.site_tagline || 'We build reliable, scalable and future-ready software solutions that help businesses automate operations, improve efficiency, and grow faster.' }}
           </p>
           <div class="flex items-center gap-3 text-sm text-slate-400">
-            <a href="#" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center"><i class="fa-brands fa-linkedin-in"></i></a>
-            <a href="#" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="#" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center"><i class="fa-brands fa-github"></i></a>
+            <a v-if="settings.social_facebook" :href="settings.social_facebook" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a v-if="settings.social_linkedin" :href="settings.social_linkedin" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a v-if="settings.social_twitter" :href="settings.social_twitter" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a v-if="settings.social_github" :href="settings.social_github" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-slate-800/80 hover:bg-brand hover:text-white transition grid place-items-center" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
           </div>
         </div>
 
@@ -177,27 +177,94 @@
           </ul>
         </div>
 
-        <!-- Col 4: Newsletter -->
+        <!-- Col 4: Contact & Office Location -->
         <div>
           <h4 class="font-bold text-white text-sm mb-5 relative inline-block">
-            Newsletter
+            Our Office & Contact
             <span class="absolute -bottom-1.5 left-0 w-8 h-[2px] bg-brand"></span>
           </h4>
-          <p class="text-xs text-slate-400 mb-4 leading-relaxed">
-            Subscribe to our newsletter for insights on enterprise software trends, scalability, and digital transformation.
-          </p>
-          <form @submit.prevent="subscribed = true" class="space-y-2.5">
-            <input v-model="emailInput" type="email" placeholder="Your work email..." required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-brand">
-            <button type="submit" class="w-full py-3 bg-brand hover:bg-brand-light text-white text-xs font-bold rounded-xl transition shadow">
-              {{ subscribed ? '✓ Subscribed!' : 'Subscribe Now' }}
-            </button>
-          </form>
+          <ul class="space-y-3.5 text-xs text-slate-400">
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-location-dot text-brand mt-0.5 text-xs shrink-0"></i>
+              <div>
+                <span class="leading-relaxed block">{{ settings.office_address || '2B/4 Ring Road, Shyamoli, Dhaka - 1207' }}</span>
+                <a
+                  v-if="settings.google_maps_url"
+                  :href="settings.google_maps_url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-brand hover:underline text-[11px] font-semibold mt-1 inline-flex items-center gap-1"
+                >
+                  View on Google Maps <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-phone text-brand mt-0.5 text-xs shrink-0"></i>
+              <div class="flex flex-col">
+                <a :href="`tel:${cleanPhone(settings.contact_phone || '+8801711000000')}`" class="hover:text-white transition font-medium">
+                  {{ settings.contact_phone || '+880 1711-000000' }}
+                </a>
+                <a
+                  v-if="settings.contact_phone_secondary"
+                  :href="`tel:${cleanPhone(settings.contact_phone_secondary)}`"
+                  class="hover:text-white transition text-slate-400 text-[11px]"
+                >
+                  {{ settings.contact_phone_secondary }}
+                </a>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fa-solid fa-envelope text-brand mt-0.5 text-xs shrink-0"></i>
+              <div class="flex flex-col">
+                <a :href="`mailto:${settings.contact_email || 'info@softpolli.com'}`" class="hover:text-white transition font-medium">
+                  {{ settings.contact_email || 'info@softpolli.com' }}
+                </a>
+                <a
+                  v-if="settings.support_email"
+                  :href="`mailto:${settings.support_email}`"
+                  class="hover:text-white transition text-slate-400 text-[11px]"
+                >
+                  {{ settings.support_email }}
+                </a>
+              </div>
+            </li>
+            <li class="flex items-center gap-3">
+              <i class="fa-regular fa-clock text-brand text-xs shrink-0"></i>
+              <span>{{ settings.business_hours || 'Sat to Thursday: 8:00 am - 7:00 pm' }}</span>
+            </li>
+          </ul>
         </div>
+      </div>
+
+      <!-- Newsletter Bar -->
+      <div class="max-w-[92%] xl:max-w-[85%] mx-auto px-6 py-8 border-b border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h4 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-envelope-open-text text-brand"></i> Stay Updated with Tech Insights
+          </h4>
+          <p class="text-xs text-slate-400 mt-0.5">Subscribe to our monthly engineering newsletter on scalable architecture.</p>
+        </div>
+        <form @submit.prevent="subscribed = true" class="flex items-center gap-2 w-full md:w-auto">
+          <input
+            v-model="emailInput"
+            type="email"
+            placeholder="Your work email..."
+            required
+            class="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-brand w-full sm:w-64"
+          />
+          <button
+            type="submit"
+            class="py-2.5 px-5 bg-brand hover:bg-brand-light text-white text-xs font-bold rounded-xl transition shadow shrink-0"
+          >
+            {{ subscribed ? '✓ Subscribed' : 'Subscribe' }}
+          </button>
+        </form>
       </div>
 
       <!-- Sub Footer -->
       <div class="max-w-[92%] xl:max-w-[85%] mx-auto px-6 py-6 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-4 relative">
-        <p>&copy; 2026 SoftPolli. All Rights Reserved. Engineered with Laravel 12 & Vue.js.</p>
+        <p>&copy; {{ new Date().getFullYear() }} SoftPolli. All Rights Reserved.</p>
         <div class="flex items-center gap-6">
           <Link href="/about" class="hover:text-brand transition">Privacy Policy</Link>
           <Link href="/about" class="hover:text-brand transition">Terms of Service</Link>
@@ -207,14 +274,19 @@
         </div>
       </div>
     </footer>
+
+    <!-- ============ FLOATING WHATSAPP CHAT WIDGET ============ -->
+    <WhatsAppWidget />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
+import WhatsAppWidget from '@/Components/WhatsAppWidget.vue';
 
 const page = usePage();
+const settings = computed(() => page.props.settings || {});
 const mobileMenuOpen = ref(false);
 const emailInput = ref('');
 const subscribed = ref(false);
@@ -247,5 +319,10 @@ function isActive(routePath) {
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cleanPhone(phone) {
+  if (!phone) return '';
+  return phone.replace(/[^0-9+]/g, '');
 }
 </script>

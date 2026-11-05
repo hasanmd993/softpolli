@@ -12,7 +12,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo('/admin/login');
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        ]);
         $middleware->web(append: [
+            \Bepsvpt\SecureHeaders\SecureHeadersMiddleware::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
         ]);
         $middleware->validateCsrfTokens(except: [

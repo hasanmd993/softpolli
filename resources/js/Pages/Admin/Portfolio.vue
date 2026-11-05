@@ -190,7 +190,7 @@
             <input
               v-model="form.live_url"
               type="text"
-              placeholder="https://example.com"
+              placeholder="https://your-client-site.com"
               class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand shadow-sm"
             />
           </div>

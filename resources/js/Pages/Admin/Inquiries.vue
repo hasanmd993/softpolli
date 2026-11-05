@@ -44,8 +44,17 @@
         </select>
       </div>
 
-      <div class="text-xs text-slate-500 dark:text-slate-400">
-        Showing <strong class="text-slate-900 dark:text-white">{{ inquiries.data?.length || 0 }}</strong> submissions
+      <div class="flex items-center gap-3">
+        <a
+          href="/admin/inquiries/export"
+          class="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-sm transition"
+        >
+          <i class="fa-solid fa-file-excel"></i>
+          Export to Excel
+        </a>
+        <div class="text-xs text-slate-500 dark:text-slate-400">
+          Showing <strong class="text-slate-900 dark:text-white">{{ inquiries.data?.length || 0 }}</strong> submissions
+        </div>
       </div>
     </div>
 
@@ -118,6 +127,13 @@
               </td>
               <td class="py-4 px-6 text-right">
                 <div class="flex items-center justify-end gap-2">
+                  <a
+                    :href="`/admin/inquiries/${item.id}/pdf`"
+                    class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-brand transition"
+                    title="Download PDF Sheet"
+                  >
+                    <i class="fa-solid fa-file-pdf text-xs"></i>
+                  </a>
                   <button
                     @click="viewDetails(item)"
                     class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-brand text-slate-700 hover:text-white dark:bg-slate-800 dark:hover:bg-brand dark:text-white text-xs font-semibold transition"
@@ -201,7 +217,14 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
+          <a
+            :href="`/admin/inquiries/${selectedItem.id}/pdf`"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-900 text-xs font-bold transition shadow-sm"
+          >
+            <i class="fa-solid fa-file-arrow-down"></i>
+            Download PDF
+          </a>
           <button
             @click="selectedItem = null"
             class="px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white text-xs font-semibold transition"

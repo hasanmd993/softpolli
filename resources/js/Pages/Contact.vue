@@ -12,7 +12,7 @@
           Let's Discuss Your <span class="text-brand">Software Vision</span>
         </h1>
         <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-xl mx-auto">
-          Send us a message below for a direct consultation, or drop by our engineering headquarters in Shyamoli, Dhaka.
+          Send us a message below for a direct consultation, or drop by our engineering office in Shyamoli, Dhaka.
         </p>
       </div>
     </section>
@@ -33,23 +33,22 @@
               <div class="w-12 h-12 rounded-2xl bg-brand/10 text-brand flex items-center justify-center text-xl mb-5">
                 <i class="fa-solid fa-location-dot"></i>
               </div>
-              <h3 class="font-extrabold text-lg text-navy-900 mb-2">Dhaka Headquarters</h3>
+              <h3 class="font-extrabold text-lg text-navy-900 mb-2">Dhaka Office</h3>
               <p class="text-xs text-slate-500 leading-relaxed mb-4">
-                2B/4 Ring Road, Shyamoli,<br />
-                Dhaka 1207, Bangladesh
+                {{ settings.office_address || '2B/4 Ring Road, Shyamoli, Dhaka 1207, Bangladesh' }}
               </p>
               <div class="pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-2">
                 <div class="flex items-center gap-2.5">
                   <i class="fa-regular fa-clock text-brand"></i>
-                  <span>Sat to Thursday: 8:00 AM – 7:00 PM</span>
+                  <span>{{ settings.business_hours || 'Sat to Thursday: 8:00 AM – 7:00 PM' }}</span>
                 </div>
                 <div class="flex items-center gap-2.5">
                   <i class="fa-solid fa-envelope text-brand"></i>
-                  <a href="mailto:info@softpolli.com" class="hover:text-brand font-medium">info@softpolli.com</a>
+                  <a :href="`mailto:${settings.contact_email || 'info@softpolli.com'}`" class="hover:text-brand font-medium">{{ settings.contact_email || 'info@softpolli.com' }}</a>
                 </div>
                 <div class="flex items-center gap-2.5">
                   <i class="fa-solid fa-phone text-brand"></i>
-                  <span class="font-medium">+880 1700-000000</span>
+                  <span class="font-medium">{{ settings.contact_phone || '+880 1700-000000' }}</span>
                 </div>
               </div>
             </div>
@@ -86,7 +85,11 @@
 </template>
 
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Head, usePage } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import QuickContactForm from '@/Components/QuickContactForm.vue';
+
+const page = usePage();
+const settings = computed(() => page.props.settings || {});
 </script>

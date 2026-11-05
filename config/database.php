@@ -60,6 +60,9 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'dump' => [
+                'dump_binary_path' => env('DB_DUMP_BINARY_PATH', 'C:/ProgramData/envkit/services/mysql/13.0.2/bin'),
+            ],
         ],
 
         'mariadb' => [
@@ -80,6 +83,9 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            'dump' => [
+                'dump_binary_path' => env('DB_DUMP_BINARY_PATH', 'C:/ProgramData/envkit/services/mysql/13.0.2/bin'),
+            ],
         ],
 
         'pgsql' => [

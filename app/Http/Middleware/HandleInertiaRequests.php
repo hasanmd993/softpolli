@@ -44,6 +44,9 @@ class HandleInertiaRequests extends Middleware
                     'email' => $request->user()->email,
                 ] : null,
             ],
+            'settings' => fn () => \Illuminate\Support\Facades\Schema::hasTable('settings')
+                ? \App\Models\Setting::getAllSettings()
+                : [],
             'csrf_token' => fn () => csrf_token(),
             'newInquiriesCount' => fn () => \Illuminate\Support\Facades\Schema::hasTable('inquiries') ? \App\Models\Inquiry::where('status', 'new')->count() : 0,
             'recentNotifications' => fn () => $request->user() && \Illuminate\Support\Facades\Schema::hasTable('inquiries')

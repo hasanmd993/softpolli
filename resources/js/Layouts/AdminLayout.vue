@@ -172,6 +172,44 @@
           </div>
         </div>
 
+        <!-- Section: Configuration & System -->
+        <div>
+          <div class="px-2.5 pb-1 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            Configuration
+          </div>
+          <div class="space-y-0.5">
+            <Link
+              href="/admin/users"
+              @click="mobileSidebarOpen = false"
+              class="flex items-center gap-2.5 px-3 py-2 rounded-xl transition"
+              :class="navLinkClass('/admin/users')"
+            >
+              <i class="fa-solid fa-user-shield w-4 text-center text-xs"></i>
+              <span>Staff & Roles</span>
+            </Link>
+
+            <Link
+              href="/admin/settings"
+              @click="mobileSidebarOpen = false"
+              class="flex items-center gap-2.5 px-3 py-2 rounded-xl transition"
+              :class="navLinkClass('/admin/settings')"
+            >
+              <i class="fa-solid fa-sliders w-4 text-center text-xs"></i>
+              <span>Site Settings</span>
+            </Link>
+
+            <Link
+              href="/admin/activity-logs"
+              @click="mobileSidebarOpen = false"
+              class="flex items-center gap-2.5 px-3 py-2 rounded-xl transition"
+              :class="navLinkClass('/admin/activity-logs')"
+            >
+              <i class="fa-solid fa-clock-rotate-left w-4 text-center text-xs"></i>
+              <span>Activity Logs</span>
+            </Link>
+          </div>
+        </div>
+
         <!-- Live Site Link -->
         <div class="pt-1">
           <a

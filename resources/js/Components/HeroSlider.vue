@@ -3,8 +3,8 @@
     <div ref="swiperContainer" class="swiper w-full h-full">
       <div class="swiper-wrapper">
         <!-- Slide 1: Software Solutions -->
-        <div class="swiper-slide relative w-full h-full overflow-hidden flex items-center pt-8 sm:pt-10 lg:pt-12 pb-8 sm:pb-10">
-          <div class="absolute inset-0 bg-cover bg-center brightness-[0.45] scale-105 transition-transform duration-1000" style="background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1920&q=85');"></div>
+        <div class="swiper-slide relative w-full h-full overflow-hidden flex items-center pt-16 sm:pt-20 lg:pt-24 pb-10 sm:pb-14">
+          <div class="absolute inset-0 bg-cover bg-center brightness-[0.45] scale-105 transition-transform duration-1000" style="background-image: url('/images/hero-team.png');"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-transparent z-10"></div>
           
           <div class="relative z-20 max-w-[92%] xl:max-w-[85%] mx-auto px-6 w-full">
@@ -31,8 +31,8 @@
         </div>
 
         <!-- Slide 2: Web Applications -->
-        <div class="swiper-slide relative w-full h-full overflow-hidden flex items-center pt-8 sm:pt-10 lg:pt-12 pb-8 sm:pb-10">
-          <div class="absolute inset-0 bg-cover bg-center brightness-[0.45] scale-105 transition-transform duration-1000" style="background-image: url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1920&q=85');"></div>
+        <div class="swiper-slide relative w-full h-full overflow-hidden flex items-center pt-16 sm:pt-20 lg:pt-24 pb-10 sm:pb-14">
+          <div class="absolute inset-0 bg-cover bg-center brightness-[0.45] scale-105 transition-transform duration-1000" style="background-image: url('/images/skills-1.jpg');"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-transparent z-10"></div>
           
           <div class="relative z-20 max-w-[92%] xl:max-w-[85%] mx-auto px-6 w-full">
@@ -59,8 +59,8 @@
         </div>
 
         <!-- Slide 3: E-Commerce & Retail -->
-        <div class="swiper-slide relative w-full h-full overflow-hidden flex items-center pt-8 sm:pt-10 lg:pt-12 pb-8 sm:pb-10">
-          <div class="absolute inset-0 bg-cover bg-center brightness-[0.45] scale-105 transition-transform duration-1000" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1920&q=85');"></div>
+        <div class="swiper-slide relative w-full h-full overflow-hidden flex items-center pt-16 sm:pt-20 lg:pt-24 pb-10 sm:pb-14">
+          <div class="absolute inset-0 bg-cover bg-center brightness-[0.45] scale-105 transition-transform duration-1000" style="background-image: url('/images/skills-2.jpg');"></div>
           <div class="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/80 to-transparent z-10"></div>
           
           <div class="relative z-20 max-w-[92%] xl:max-w-[85%] mx-auto px-6 w-full">
@@ -151,6 +151,10 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+:deep(.swiper-slide) {
+  display: flex !important;
+  align-items: center;
+}
 :deep(.swiper-pagination-bullet) {
   width: 10px;
   height: 10px;

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class InquiryAdminController extends Controller
 {
@@ -55,5 +57,37 @@ class InquiryAdminController extends Controller
         $inquiry->delete();
 
         return back()->with('success', "Inquiry #{$inquiry->id} deleted successfully.");
+    }
+
+    /**
+     * Export inquiries to Excel.
+     */
+    public function export()
+    {
+        return (new FastExcel(Inquiry::latest()->get()))->download('softpolli-inquiries-' . date('Y-m-d') . '.xlsx', function ($inquiry) {
+            return [
+                'ID' => $inquiry->id,
+                'Type' => ucfirst($inquiry->type),
+                'Name' => $inquiry->name,
+                'Email' => $inquiry->email,
+                'Phone' => $inquiry->phone ?? 'N/A',
+                'Company' => $inquiry->company ?? 'N/A',
+                'Service' => $inquiry->service ?? 'N/A',
+                'Budget' => $inquiry->budget_range ?? 'N/A',
+                'Timeline' => $inquiry->timeline ?? 'N/A',
+                'Status' => ucfirst($inquiry->status),
+                'Message' => $inquiry->message ?? '',
+                'Created At' => $inquiry->created_at?->format('Y-m-d H:i') ?? '',
+            ];
+        });
+    }
+
+    /**
+     * Download branded PDF summary of an inquiry.
+     */
+    public function downloadPdf(Inquiry $inquiry)
+    {
+        $pdf = Pdf::loadView('pdf.inquiry', compact('inquiry'));
+        return $pdf->download("softpolli-inquiry-{$inquiry->id}.pdf");
     }
 }

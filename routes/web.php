@@ -12,8 +12,10 @@ use App\Http\Controllers\Admin\PortfolioAdminController;
 use App\Http\Controllers\Admin\PricingPlanAdminController;
 use App\Http\Controllers\Admin\ProductAdminController;
 use App\Http\Controllers\Admin\ServiceAdminController;
+use App\Http\Controllers\Admin\SettingAdminController;
 use App\Http\Controllers\Admin\TeamMemberAdminController;
 use App\Http\Controllers\Admin\TestimonialAdminController;
+use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,7 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/services', [PageController::class, 'services'])->name('services');
 Route::get('/portfolio', [PageController::class, 'portfolio'])->name('portfolio');
+Route::get('/portfolio/{slug}', [PageController::class, 'portfolioProject'])->name('portfolio.show');
 Route::get('/pricing', [PageController::class, 'pricing'])->name('pricing');
 Route::get('/blog', [PageController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [PageController::class, 'blogPost'])->name('blog.show');
@@ -45,11 +48,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Guest Admin Auth
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+        Route::get('/captcha/refresh', [AuthController::class, 'refreshCaptcha'])->name('captcha.refresh');
         Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
     });
 
     // Protected Admin Panel
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
         Route::put('/profile/password', [AuthController::class, 'updatePassword'])->name('profile.password');
@@ -58,6 +62,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity_logs.index');
 
         // Inquiry & Lead Management
+        Route::get('/inquiries/export', [InquiryAdminController::class, 'export'])->name('inquiries.export');
+        Route::get('/inquiries/{inquiry}/pdf', [InquiryAdminController::class, 'downloadPdf'])->name('inquiries.pdf');
         Route::get('/inquiries', [InquiryAdminController::class, 'index'])->name('inquiries.index');
         Route::patch('/inquiries/{inquiry}/status', [InquiryAdminController::class, 'updateStatus'])->name('inquiries.status');
         Route::delete('/inquiries/{inquiry}', [InquiryAdminController::class, 'destroy'])->name('inquiries.destroy');
@@ -117,6 +123,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/faqs', [FaqAdminController::class, 'store'])->name('faqs.store');
         Route::put('/faqs/{faq}', [FaqAdminController::class, 'update'])->name('faqs.update');
         Route::delete('/faqs/{faq}', [FaqAdminController::class, 'destroy'])->name('faqs.destroy');
+
+        // User & Role Management (RBAC) Module
+        Route::get('/users/export', [UserAdminController::class, 'export'])->name('users.export');
+        Route::get('/users', [UserAdminController::class, 'index'])->name('users.index');
+        Route::post('/users', [UserAdminController::class, 'store'])->name('users.store');
+        Route::put('/users/{user}', [UserAdminController::class, 'update'])->name('users.update');
+        Route::delete('/users/{user}', [UserAdminController::class, 'destroy'])->name('users.destroy');
+
+        // Site Settings Module
+        Route::get('/settings', [SettingAdminController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingAdminController::class, 'update'])->name('settings.update');
 
         // Media Upload API (Intervention WebP)
         Route::post('/media/upload', [MediaUploadController::class, 'upload'])->name('media.upload');

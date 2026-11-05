@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Super Admin role implicitly grants all permissions
+        Gate::before(function ($user, $ability) {
+            return ($user->hasRole('Super Admin') || $user->is_admin) ? true : null;
+        });
     }
 }

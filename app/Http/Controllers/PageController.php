@@ -64,6 +64,24 @@ class PageController extends Controller
     }
 
     /**
+     * Render a single portfolio project case study page.
+     */
+    public function portfolioProject(string $slug): Response
+    {
+        $project = PortfolioProject::where('slug', $slug)->firstOrFail();
+
+        $relatedProjects = PortfolioProject::where('id', '!=', $project->id)
+            ->orderBy('sort_order')
+            ->limit(3)
+            ->get();
+
+        return Inertia::render('PortfolioProject', [
+            'project' => $project,
+            'relatedProjects' => $relatedProjects,
+        ]);
+    }
+
+    /**
      * Render the Pricing & Packages page with dynamic database models.
      */
     public function pricing(): Response

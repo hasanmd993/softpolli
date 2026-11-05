@@ -15,6 +15,7 @@ class AdminUserSeeder extends Seeder
             [
                 'name' => 'SoftPolli Admin',
                 'password' => Hash::make('admin123'),
+                'is_admin' => true,
                 'email_verified_at' => now(),
             ]
         );

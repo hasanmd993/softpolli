@@ -28,6 +28,24 @@ class TestimonialSeeder extends Seeder
                 'src' => '/images/t2.png',
                 'sort_order' => 2,
             ],
+            [
+                'name' => 'Dr. Farhana Chowdhury',
+                'designation' => 'Director of Operations',
+                'company' => 'MediCare Diagnostic Complex',
+                'category' => 'Hospital & Diagnostic ERP',
+                'quote' => 'SoftPolli developed our multi-branch patient tracking and lab reporting suite with high precision. Patient report delivery time was cut by 65%, and their zero-downtime database migration was flawless.',
+                'src' => '/images/skills-2.jpg',
+                'sort_order' => 3,
+            ],
+            [
+                'name' => 'Kazi Rezwanul Karim',
+                'designation' => 'Chief Supply Officer',
+                'company' => 'Bengal Freight & Logistics',
+                'category' => 'Supply Chain & Inventory ERP',
+                'quote' => 'The custom ERP system designed by SoftPolli unified our 6 regional warehouses in real time. We experienced zero stock discrepancies since deployment, with rapid sub-second query performance.',
+                'src' => '/images/skills-1.jpg',
+                'sort_order' => 4,
+            ],
         ];
 
         foreach ($testimonials as $t) {

@@ -36,7 +36,7 @@
         <article
           v-for="(project, i) in filteredProjects"
           :key="project.id"
-          class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 grid lg:grid-cols-2 gap-10 items-center"
+          class="bg-white rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 grid lg:grid-cols-2 gap-8 lg:gap-10 items-center"
         >
           <div :class="i % 2 === 1 ? 'lg:order-2' : ''">
             <div class="flex items-center gap-3 text-xs text-brand font-bold mb-2 uppercase">
@@ -44,9 +44,11 @@
               <span>&bull;</span>
               <span>{{ project.category }}</span>
             </div>
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-navy-900 mb-3 leading-snug">
-              {{ project.title }} &mdash; {{ project.tagline }}
-            </h3>
+            <Link :href="`/portfolio/${project.slug}`" class="block group/title">
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-navy-900 group-hover/title:text-brand transition mb-3 leading-snug">
+                {{ project.title }} &mdash; {{ project.tagline }}
+              </h3>
+            </Link>
             <div class="text-xs sm:text-sm text-slate-500 leading-relaxed mb-6 prose prose-xs sm:prose-sm max-w-none prose-slate [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-4" v-html="sanitizeHtml(project.description)"></div>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs mb-8">
@@ -57,8 +59,14 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-4">
+              <Link
+                :href="`/portfolio/${project.slug}`"
+                class="inline-flex items-center gap-2 bg-navy-900 hover:bg-brand text-white text-xs font-bold px-6 py-3 rounded-full transition shadow-md"
+              >
+                Case Study <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </Link>
               <a
-                v-if="project.live_url !== '#'"
+                v-if="project.live_url && project.live_url !== '#'"
                 :href="project.live_url"
                 target="_blank"
                 class="inline-flex items-center gap-2 bg-brand hover:bg-brand-light text-white text-xs font-bold px-6 py-3 rounded-full transition shadow-md shadow-brand/20"
@@ -74,13 +82,20 @@
             </div>
           </div>
 
-          <div :class="i % 2 === 1 ? 'lg:order-1' : ''" class="rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[340px] border border-slate-100 group">
+          <Link
+            :href="`/portfolio/${project.slug}`"
+            :class="i % 2 === 1 ? 'lg:order-1' : ''"
+            class="rounded-2xl overflow-hidden shadow-lg h-[280px] sm:h-[340px] border border-slate-100 group block relative"
+          >
             <img
               :src="project.image"
               :alt="project.title"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-          </div>
+            <div class="absolute inset-0 bg-navy-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span class="bg-white/90 backdrop-blur text-navy-950 font-bold text-xs px-4 py-2 rounded-full shadow">View Case Study</span>
+            </div>
+          </Link>
         </article>
       </div>
     </section>

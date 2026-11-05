@@ -12,30 +12,35 @@
         </h2>
       </div>
 
-      <!-- Controls -->
-      <div class="flex items-center gap-3">
-        <button
-          @click="prev"
-          :disabled="currentIndex === 0"
-          class="grid place-items-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white/10 transition text-sm disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Previous team member"
-        >
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
+    <!-- Controls -->
+    <div v-if="maxIndex > 0" class="flex items-center gap-3">
+      <button
+        @click="handleManualPrev"
+        class="grid place-items-center w-11 h-11 rounded-full border border-white/20 text-white hover:bg-white/10 transition text-sm shadow-sm"
+        aria-label="Previous team member"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
 
-        <button
-          @click="next"
-          :disabled="currentIndex >= maxIndex"
-          class="grid place-items-center w-11 h-11 rounded-full bg-brand hover:bg-brand-light text-white transition text-sm disabled:opacity-30 disabled:cursor-not-allowed shadow-md shadow-brand/25"
-          aria-label="Next team member"
-        >
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
-      </div>
+      <button
+        @click="handleManualNext"
+        class="grid place-items-center w-11 h-11 rounded-full bg-brand hover:bg-brand-light text-white transition text-sm shadow-md shadow-brand/25"
+        aria-label="Next team member"
+      >
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
+  </div>
 
-    <!-- Slider Container -->
-    <div ref="sliderWrapper" class="overflow-hidden">
+  <!-- Slider Container -->
+  <div
+    ref="sliderWrapper"
+    class="overflow-hidden"
+    @mouseenter="pauseAutoplay"
+    @mouseleave="resumeAutoplay"
+    @focusin="pauseAutoplay"
+    @focusout="resumeAutoplay"
+  >
       <div
         class="flex gap-6 transition-transform duration-500 ease-out"
         :style="{ transform: `translateX(-${currentIndex * (cardWidth + 24)}px)` }"
@@ -107,6 +112,8 @@ const sliderWrapper = ref(null);
 const currentIndex = ref(0);
 const containerWidth = ref(1200);
 const visibleCards = ref(4);
+const isPaused = ref(false);
+let autoplayTimer = null;
 
 function updateDimensions() {
   if (sliderWrapper.value?.clientWidth) {
@@ -128,7 +135,10 @@ function updateDimensions() {
 const cardWidth = computed(() => {
   const gap = 24;
   const width = containerWidth.value || 1200;
-  return Math.max(260, (width - gap * (visibleCards.value - 1)) / visibleCards.value);
+  if (visibleCards.value === 1) {
+    return width;
+  }
+  return Math.max(220, (width - gap * (visibleCards.value - 1)) / visibleCards.value);
 });
 
 const maxIndex = computed(() => {
@@ -136,23 +146,70 @@ const maxIndex = computed(() => {
 });
 
 function next() {
+  if (maxIndex.value <= 0) return;
   if (currentIndex.value < maxIndex.value) {
     currentIndex.value++;
+  } else {
+    currentIndex.value = 0;
   }
 }
 
 function prev() {
+  if (maxIndex.value <= 0) return;
   if (currentIndex.value > 0) {
     currentIndex.value--;
+  } else {
+    currentIndex.value = maxIndex.value;
   }
+}
+
+function handleManualNext() {
+  next();
+  restartAutoplay();
+}
+
+function handleManualPrev() {
+  prev();
+  restartAutoplay();
+}
+
+function startAutoplay() {
+  stopAutoplay();
+  if (maxIndex.value <= 0) return;
+  autoplayTimer = setInterval(() => {
+    if (!isPaused.value) {
+      next();
+    }
+  }, 3500);
+}
+
+function stopAutoplay() {
+  if (autoplayTimer) {
+    clearInterval(autoplayTimer);
+    autoplayTimer = null;
+  }
+}
+
+function restartAutoplay() {
+  startAutoplay();
+}
+
+function pauseAutoplay() {
+  isPaused.value = true;
+}
+
+function resumeAutoplay() {
+  isPaused.value = false;
 }
 
 onMounted(() => {
   updateDimensions();
+  startAutoplay();
   window.addEventListener('resize', updateDimensions);
 });
 
 onUnmounted(() => {
+  stopAutoplay();
   window.removeEventListener('resize', updateDimensions);
 });
 </script>

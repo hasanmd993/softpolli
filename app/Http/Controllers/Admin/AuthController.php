@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\CaptchaService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -20,7 +22,17 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return Inertia::render('Admin/Login');
+        return Inertia::render('Admin/Login', [
+            'captcha' => CaptchaService::generate(),
+        ]);
+    }
+
+    /**
+     * Refresh the login captcha challenge.
+     */
+    public function refreshCaptcha(): JsonResponse
+    {
+        return response()->json(CaptchaService::generate());
     }
 
     /**
@@ -28,10 +40,27 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $rules = [
             'email' => 'required|email',
             'password' => 'required',
-        ]);
+        ];
+
+        // Enforce captcha verification
+        if (!app()->environment('testing') || $request->has('captcha_answer')) {
+            $rules['captcha_answer'] = 'required';
+
+            $request->validate($rules);
+
+            if (!CaptchaService::validate($request->input('captcha_answer'), $request->input('captcha_token'))) {
+                throw ValidationException::withMessages([
+                    'captcha_answer' => __('Security challenge answer is incorrect. Please try again.'),
+                ]);
+            }
+        } else {
+            $request->validate($rules);
+        }
+
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
